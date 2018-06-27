@@ -2,7 +2,7 @@ package com.omni.dependencyinjection.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.omni.dependencyinjection.interfaces.RandomUsersApi;
+import com.omni.dependencyinjection.interfaces.NewsServiceApi;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,11 +11,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = OkhttpClientModule.class)
-public class RandomUserModule {
+public class NewsModule {
 
     @Provides
-    public RandomUsersApi randomUsersApi(Retrofit retrofit){
-        return retrofit.create(RandomUsersApi.class);
+    public NewsServiceApi randomUsersApi(Retrofit retrofit){
+        return retrofit.create(NewsServiceApi.class);
     }
 
     @Provides
@@ -23,7 +23,7 @@ public class RandomUserModule {
                              GsonConverterFactory gsonConverterFactory, Gson gson){
         return new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("https://randomuser.me/")
+                .baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(gsonConverterFactory)
                 .build();
     }

@@ -10,12 +10,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.picasso.OkHttp3Downloader;
-import com.omni.dependencyinjection.adapter.RandomUserAdapter;
-import com.omni.dependencyinjection.application.RandomUserApplication;
+import com.omni.dependencyinjection.adapter.NewsAdapter;
+import com.omni.dependencyinjection.application.NewsApplication;
 import com.omni.dependencyinjection.component.DaggerMainActivityComponent;
 import com.omni.dependencyinjection.component.MainActivityComponent;
-import com.omni.dependencyinjection.interfaces.RandomUsersApi;
-import com.omni.dependencyinjection.model.RandomUsers;
+import com.omni.dependencyinjection.interfaces.NewsServiceApi;
+import com.omni.dependencyinjection.model.NewsResponse;
 import com.omni.dependencyinjection.module.MainActivityModule;
 import com.squareup.picasso.Picasso;
 
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
     Picasso picasso;
 
     @Inject
-    RandomUsersApi randomUsersApi;
+    NewsServiceApi newsServiceApi;
 
     @Inject
-    RandomUserAdapter mAdapter;
+    NewsAdapter mAdapter;
 
 
     @Override
@@ -62,17 +62,17 @@ public class MainActivity extends AppCompatActivity {
     private void afterActivityLevelComponent() {
         MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
                 .mainActivityModule(new MainActivityModule(this))
-                .randomUserComponent(RandomUserApplication.get(this).getRandomUserApplicationComponent())
+                .newsComponent(NewsApplication.get(this).getRandomUserApplicationComponent())
                 .build();
         mainActivityComponent.injectMainActivity(this);
     }
 
 //    public void afterDagger() {
-//        RandomUserComponent daggerRandomUserComponent = DaggerRandomUserComponent.builder()
+//        NewsComponent daggerRandomUserComponent = DaggerNewsComponent.builder()
 //                .contextModule(new ContextModule(this))
 //                .build();
 //        picasso = daggerRandomUserComponent.getPicasso();
-//        randomUsersApi = daggerRandomUserComponent.getRandomUserService();
+//        newsServiceApi = daggerRandomUserComponent.getRandomUserService();
 //    }
 
     private void beforeDagger2() {
@@ -120,26 +120,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateUsers() {
-        Call<RandomUsers> randomUsersCall = getRandomUserService().getRandomUsers(10);
-        randomUsersCall.enqueue(new Callback<RandomUsers>() {
+        Call<NewsResponse> randomUsersCall = getRandomUserService().getRandomUsers("bitcoin" ,"publishedAt",BuildConfig.NEWS_API_KEY);
+        randomUsersCall.enqueue(new Callback<NewsResponse>() {
             @Override
-            public void onResponse(Call<RandomUsers> call, @NonNull Response<RandomUsers> response) {
+            public void onResponse(@NonNull Call<NewsResponse> call, @NonNull Response<NewsResponse> response) {
                 if(response.isSuccessful()) {
-                    Log.d("", "onResponse: "+response.body().getResults().get(0));
-                    mAdapter.setItems(response.body().getResults());
+                    Log.d("", "onResponse: "+response.body().getArticles().get(0));
+                    mAdapter.setItems(response.body().getArticles());
                     recyclerView.setAdapter(mAdapter);
                 }
             }
 
             @Override
-            public void onFailure(Call<RandomUsers> call, Throwable t) {
+            public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
                 Timber.i(t.getMessage());
             }
         });
     }
 
-    public RandomUsersApi getRandomUserService(){
-        return randomUsersApi;
+    public NewsServiceApi getRandomUserService(){
+        return newsServiceApi;
     }
 
 

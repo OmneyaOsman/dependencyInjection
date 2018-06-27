@@ -7,7 +7,7 @@ import com.omni.dependencyinjection.module.MainActivityModule;
 import dagger.Component;
 
 @MainActivityScope
-@Component(modules = MainActivityModule.class , dependencies = RandomUserComponent.class)
+@Component(modules = MainActivityModule.class , dependencies = NewsComponent.class)
 public interface MainActivityComponent {
     void injectMainActivity(MainActivity mainActivity);
 }

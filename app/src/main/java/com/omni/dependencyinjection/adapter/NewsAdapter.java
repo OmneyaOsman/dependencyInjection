@@ -10,20 +10,20 @@ import android.widget.TextView;
 
 import com.omni.dependencyinjection.MainActivity;
 import com.omni.dependencyinjection.R;
-import com.omni.dependencyinjection.model.Result;
+import com.omni.dependencyinjection.model.Article;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.RandomUserViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.RandomUserViewHolder> {
 
     private final Picasso picasso;
     private final MainActivity mainActivity;
-    private List<Result> resultList = new ArrayList<>();
+    private List<Article> articleList = new ArrayList<>();
 
 
-   public RandomUserAdapter(MainActivity mainActivity, Picasso picasso) {
+   public NewsAdapter(MainActivity mainActivity, Picasso picasso) {
         this.mainActivity = mainActivity;
         this.picasso = picasso;
     }
@@ -33,28 +33,27 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Ra
     @NonNull
     @Override
     public RandomUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_random_user,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news,
                 parent, false);
         return new RandomUserViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RandomUserViewHolder holder, int position) {
-        Result result = resultList.get(position);
-        holder.textView.setText(String.format("%s %s", result.getName().getFirst(),
-                result.getName().getLast()));
+        Article article = articleList.get(position);
+        holder.textView.setText( article.getTitle());
         Picasso.get()
-                .load(result.getPicture().getLarge())
+                .load(article.getUrlToImage())
                 .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return resultList.size();
+        return articleList.size();
     }
 
-    public void setItems(List<Result> results) {
-        resultList = results;
+    public void setItems(List<Article> articles) {
+        articleList = articles;
         notifyDataSetChanged();
     }
 
