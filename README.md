@@ -8,3 +8,6 @@ Using Dagger2 to inject MainActivity
 Resources 
 Series of 
 https://medium.com/@harivigneshjayapalan/dagger-2-for-android-beginners-introduction-be6580cb3edb
+
+APINews
+https://newsapi.org/
